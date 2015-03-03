@@ -58,10 +58,10 @@ module Rollout
       @users = {} if not @users.is_a?(Hash)
       @variants = {} if not @variants.is_a?(Hash)
 
-      @admin = false if not (!!@admin == @admin)
-      @internal = false if not (!!@internal == @internal)
+      @admin = to_boolean(@admin) if @admin.is_a?(String)
+      @internal = to_boolean(@internal) if @internal.is_a?(String)
 
-      # Now caclulate
+      # Now calculate
       @percentages = compute_percentages
     end
 
@@ -392,5 +392,8 @@ module Rollout
         end
       end
 
+      def to_boolean(str)
+        str == 'true'
+      end
   end
 end
