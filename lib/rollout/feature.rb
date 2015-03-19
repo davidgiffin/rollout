@@ -121,14 +121,14 @@ module Rollout
       percentages = []
       @variants.each do |variant,percent|
         if !percent.is_a?(Integer) or percent < 0 or percent > 100
-          raise "Bad percentage #{percent.inspect} for variant #{variant}"
+          throw "Bad percentage #{percent.inspect} for variant #{variant}"
         end
         if percent > 0
           total += percent
           percentages << [total, variant]
         end
         if total > 100
-          raise "Total of percentages > 100 for variant #{variant}"
+          throw "Total of percentages > 100 for variant #{variant}"
         end
       end
       @percentages = percentages
