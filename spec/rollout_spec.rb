@@ -338,6 +338,27 @@ describe "Rollout" do
     end
   end
 
+  describe "activating a feature for a group and percentage of users" do
+    before do
+      @rollout.activate_percentage(:chat, 20)
+    end
+
+    it "activates the feature for that percentage of the group users" do
+      @rollout.activate_group(:chat, :fivesonly)
+      (1..200).select { |id| @rollout.active?(:chat, stub(:id => id)) }.length.should be_within(1).of(8)
+    end
+
+    it "activates the feature for that percentage of the group users" do
+      @rollout.activate_group(:chat, :all)
+      (1..200).select { |id| @rollout.active?(:chat, stub(:id => id)) }.length.should be_within(5).of(40)
+    end
+
+    it "is not active for users for which the block evaluates to false" do
+      @rollout.activate_group(:chat, :fake)
+      (1..200).select { |id| @rollout.active?(:chat, stub(:id => id)) }.length.should eq(0)
+    end
+  end
+
   describe "deactivating the percentage of users" do
     before do
       @rollout.activate_percentage(:chat, 100)
