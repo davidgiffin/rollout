@@ -353,6 +353,14 @@ module Rollout
         false
       end
 
+      def variant_for_group_and_percentage(id, in_variant = false)
+        if (!@percentage.zero? || @percentages.present?) && @groups.present?
+          variant_for_group(id) && variant_by_percentage(id, variant?)
+        else
+          variant_for_group(id) || variant_by_percentage(id, variant?)
+        end
+      end
+
       def variant_for_group(id)
         # puts "groups are now: " + @groups.inspect
         if @groups.length > 0
@@ -444,10 +452,9 @@ module Rollout
 
         variant = variant_from_url(user_id)
         variant ||= variant_for_user(user_id)
-        variant ||= variant_for_group(user_id)
+        variant ||= variant_for_group_and_percentage(user_id, variant?)
         variant ||= variant_for_admin(user_id)
         variant ||= variant_for_internal
-        variant ||= variant_by_percentage(user_id, variant?)
         variant ||= [:off, 'w']
 
         # puts variant.inspect
